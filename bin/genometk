@@ -53,6 +53,8 @@ def print_help():
       nucleotide -> Calculate nucleotide properties of genome.
       gene       -> Calculate gene properties of genome.
 
+    Small subunit (16S rRNA) properties:
+      ssu -> Identify, extract, and classify 16S rRNA genes.
 
   Use: genometk <command> -h for command specific help.
 
@@ -107,7 +109,7 @@ if __name__ == '__main__':
                                         description='Calculate nucleotide properties of genome.')
     nucleotide_parser.add_argument('genome_file', help="fasta file of nucleotide sequences comprising genome")
     nucleotide_parser.add_argument('output_dir', help="output directory")
-    nucleotide_parser.add_argument('-c', '--contig_break', help="minimum number of ambiguous bases for defining contigs", type=int, default=10)
+    nucleotide_parser.add_argument('--contig_break', help="minimum number of ambiguous bases for defining contigs", type=int, default=10)
     nucleotide_parser.add_argument('--silent', help="suppress output", action='store_true')
 
     # calculate gene properties of genome
@@ -118,6 +120,17 @@ if __name__ == '__main__':
     gene_parser.add_argument('gff_file', help="generic feature file describing identified genes")
     gene_parser.add_argument('output_dir', help="output directory")
     gene_parser.add_argument('--silent', help="suppress output", action='store_true')
+
+    # identify, extract, and classify 16S rRNA genes
+    ssu_parser = subparsers.add_parser('ssu',
+                                        formatter_class=CustomHelpFormatter,
+                                        description='Identify, extract, and classify 16S rRNA genes.')
+    ssu_parser.add_argument('genome_file', help="fasta file of nucleotide sequences comprising genome")
+    ssu_parser.add_argument('output_dir', help="output directory")
+    ssu_parser.add_argument('--evalue', help='e-value threshold for identifying hits', type=float, default=1e-5)
+    ssu_parser.add_argument('--concatenate', help='concatenate hits within the specified number of base pairs', type=int, default=200)
+    ssu_parser.add_argument('--cpus', help='number of cpus to use', type=int, default=1)
+    ssu_parser.add_argument('--silent', help="suppress output", action='store_true')
 
     # get and check options
     args = None

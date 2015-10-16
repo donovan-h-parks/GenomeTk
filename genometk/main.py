@@ -96,15 +96,20 @@ class OptionsParser():
                                          type(metadata_values[field]).__name__.upper()))
         fout.close()
 
+    def ssu(self, options):
+        self.logger.info('Calculating gene properties of genome.')
+
     def parse_options(self, options):
         """Parse user options and call the correct pipeline(s)"""
 
-        # check_dependencies(('FastTree', 'hmmsearch'))
+        check_dependencies(('blastn'))
 
         if options.subparser_name == 'nucleotide':
             self.nucleotide(options)
         elif options.subparser_name == 'gene':
             self.gene(options)
+        elif options.subparser_name == 'ssu':
+            self.ssu(options)
         else:
             self.logger.error('  [Error] Unknown RefineM command: ' + options.subparser_name + '\n')
             sys.exit()
