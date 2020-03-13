@@ -1,13 +1,13 @@
 # GenomeTk
 
-[![version status](https://img.shields.io/pypi/v/genome_tk.svg)](https://pypi.python.org/pypi/genome_tk)
+[![version status](https://img.shields.io/pypi/v/genometk.svg)](https://pypi.python.org/pypi/genometk)
 
 The genome toolkit is a collection of methods for determining characteristics about genomes. 
 
 ## Install
 
 The simplest way to install this package is through pip:
-> sudo pip install genome_tk
+> sudo pip install genometk
 
 GenomeTk relies on several other software packages:
 
