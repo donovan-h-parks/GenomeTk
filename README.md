@@ -1,6 +1,6 @@
 # GenomeTk
 
-<b>[This project is in active development and not currently recommended for public use.]</b>
+[![version status](https://img.shields.io/pypi/v/genome_tk.svg)](https://pypi.python.org/pypi/genome_tk)
 
 The genome toolkit is a collection of methods for determining characteristics about genomes. 
 
