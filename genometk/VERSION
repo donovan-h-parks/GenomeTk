@@ -1,3 +1,6 @@
+0.1.0
+- initial migration to Python 3
+
 0.0.11
 - modified blastn classifications to search for top 5 hits, although the top hit is still only reported
 

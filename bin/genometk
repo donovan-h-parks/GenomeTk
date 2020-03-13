@@ -1,4 +1,5 @@
-#!/srv/sw/python/2.7.4/bin/python
+#!/usr/bin/env python3
+
 ###############################################################################
 #                                                                             #
 #    This program is free software: you can redistribute it and/or modify     #
@@ -47,9 +48,9 @@ def version():
 def print_help():
     """Help menu."""
 
-    print ''
-    print '                ...::: GenomeTk v' + version() + ' :::...'''
-    print '''\
+    print('')
+    print('                ...::: GenomeTk v' + version() + ' :::...''')
+    print('''\
 
     Calculate genomic properties:
       nucleotide -> Calculate nucleotide properties of genome.
@@ -62,7 +63,7 @@ def print_help():
 
   Feature requests or bug reports can be sent to Donovan Parks (donovan.parks@gmail.com)
     or posted on GitHub (https://github.com/dparks1134/GenomeTk).
-    '''
+    ''')
 
 if __name__ == '__main__':
 
@@ -134,7 +135,7 @@ if __name__ == '__main__':
         else:
             parser.parse_options(args)
     except SystemExit:
-        print "\n  Controlled exit resulting from an unrecoverable error or warning."
+        print("\n  Controlled exit resulting from an unrecoverable error or warning.")
     except:
-        print "\nUnexpected error:", sys.exc_info()[0]
+        print("\nUnexpected error:", sys.exc_info()[0])
         raise

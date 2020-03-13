@@ -271,7 +271,7 @@ class RNA(object):
 
             hits = {}
             if len(seq_info) > 0:
-                for seq_id, seq_hits in seq_info.iteritems():
+                for seq_id, seq_hits in seq_info.items():
                     for hit in seq_hits:
                         self._add_hit(hits, seq_id, hit, concatenate_threshold)
 
@@ -279,8 +279,8 @@ class RNA(object):
 
         # find best domain hit for each sequence
         best_hits = {}
-        for _, hits in hits_per_domain.iteritems():
-            for seq_id, info in hits.iteritems():
+        for _, hits in hits_per_domain.items():
+            for seq_id, info in hits.items():
                 if '-#' in seq_id:
                     seq_id = seq_id[0:seq_id.rfind('-#')]
 
@@ -288,7 +288,7 @@ class RNA(object):
                 
         # filter for min size
         filtered_best_hits = {}
-        for seq_id, seq_info in best_hits.iteritems():
+        for seq_id, seq_info in best_hits.items():
             if int(seq_info[4]) >= min_length:
                 filtered_best_hits[seq_id] = seq_info
 

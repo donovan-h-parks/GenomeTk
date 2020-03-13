@@ -34,18 +34,6 @@ class OptionsParser():
         
         self.logger = logging.getLogger('timestamp')
 
-    def _read_config_file(self):
-        """Read configuration info."""
-
-        cfg_file = os.path.join(os.path.dirname(os.path.realpath(__file__)), '..', 'genometk.cfg')
-
-        d = {}
-        for line in open(cfg_file):
-            key, value = line.split('=')
-            d[key] = value.strip()
-
-        return d
-
     def nucleotide(self, options):
         self.logger.info('Calculating nucleotide properties of genome.')
 
@@ -133,7 +121,6 @@ class OptionsParser():
         rna_models['ssu'] = ('ar_16S', 'bac_16S', 'euk_18S')
         rna_models['lsu_23S'] = ('ar_23S', 'bac_23S', 'euk_28S')
         rna_models['lsu_5S'] = ('ar_5S', 'bac_5S', 'euk_5S')
-        #rna_models.append(('ar_5_8S', None, 'euk_5_8S'))
         
         ar_model, bac_model, euk_model = rna_models[options.rna_gene]
         
