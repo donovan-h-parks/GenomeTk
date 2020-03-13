@@ -123,7 +123,7 @@ class MetadataGenes():
 
     def __init__(self):
         """Initialization"""
-        self.logger = logging.getLogger()
+        self.logger = logging.getLogger('timestamp')
 
     def generate(self, genome_file, gff_file):
         """Derive metdata from gene sequences.
@@ -156,22 +156,22 @@ class MetadataGenes():
         gene_stats['protein_count'] = gff_parser.cds_count
         gene_desc['protein_count'] = "Number of protein coding genes."
 
-        gene_stats['tRNA_count'] = gff_parser.tRNA_count
-        gene_desc['tRNA_count'] = "Number of tRNA genes."
-
-        gene_stats['ncRNA_count'] = gff_parser.ncRNA_count
-        gene_desc['ncRNA_count'] = "Number of ncRNA genes."
-
-        gene_stats['rRNA_count'] = gff_parser.rRNA_count
-        gene_desc['rRNA_count'] = "Number of rRNA genes."
-
-        gene_stats['16S_count'] = gff_parser.rRNA_16S_count
-        gene_desc['16S_count'] = "Number of 16S rRNA genes."
-
         gene_stats['coding_bases'] = coding_bases
         gene_desc['coding_bases'] = "Number of coding bases in genome."
 
         gene_stats['coding_density'] = float(coding_bases) * 100.0 / genome_size
         gene_desc['coding_density'] = "Percentage of coding bases in genome."
+
+        # This quantities are not being reported here as they are only specified
+        # in the NCBI GFF files. A general GFF file (e.g., for prodigal) only
+        # specifies identified CDS.
+        # gene_stats['tRNA_count'] = gff_parser.tRNA_count
+        # gene_desc['tRNA_count'] = "Number of tRNA genes identified in genome."
+        # gene_stats['ncRNA_count'] = gff_parser.ncRNA_count
+        # gene_desc['ncRNA_count'] = "Number of ncRNA genes identified in genome."
+        # gene_stats['rRNA_count'] = gff_parser.rRNA_count
+        # gene_desc['rRNA_count'] = "Number of rRNA genes identified in genome."
+        # gene_stats['16S_count'] = gff_parser.rRNA_16S_count
+        # gene_desc['16S_count'] = "Number of 16S rRNA genes identified in genome."
 
         return gene_stats, gene_desc

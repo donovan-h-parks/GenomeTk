@@ -27,7 +27,7 @@ class MetadataNucleotide():
 
     def __init__(self):
         """Initialization"""
-        self.logger = logging.getLogger()
+        self.logger = logging.getLogger('timestamp')
 
     def generate(self, genome_file, contig_break):
         """Derive metdata across nucleotide sequences.
@@ -65,7 +65,7 @@ class MetadataNucleotide():
         nuc_desc['n50_scaffolds'] = "Scaffold length at which 50% of total bases in assembly are in scaffolds of that length or greater."
         nuc_stats['l50_scaffolds'] = seq_tk.L50(scaffolds, nuc_stats['n50_scaffolds'])
         nuc_desc['l50_scaffolds'] = "Number of scaffolds longer than, or equal to, the scaffold N50 length."
-        nuc_stats['mean_scaffold_length'] = seq_tk.mean_length(scaffolds)
+        nuc_stats['mean_scaffold_length'] = int(seq_tk.mean_length(scaffolds))
         nuc_desc['mean_scaffold_length'] = "Mean length of scaffolds in base pairs."
         nuc_stats['longest_scaffold'] = seq_tk.max_length(scaffolds)
         nuc_desc['longest_scaffold'] = "Number of bases in longest scaffold."
@@ -81,7 +81,7 @@ class MetadataNucleotide():
         nuc_desc['n50_contigs'] = "Contig length at which 50% of total bases in assembly are in contigs of that length or greater."
         nuc_stats['l50_contigs'] = seq_tk.L50(contigs, nuc_stats['n50_contigs'])
         nuc_desc['l50_contigs'] = "Number of contigs longer than, or equal to, the contig N50 length."
-        nuc_stats['mean_contig_length'] = seq_tk.mean_length(contigs)
+        nuc_stats['mean_contig_length'] = int(seq_tk.mean_length(contigs))
         nuc_desc['mean_contig_length'] = "Mean length of contigs in base pairs."
         nuc_stats['longest_contig'] = seq_tk.max_length(contigs)
         nuc_desc['longest_contig'] = "Number of bases in longest contig."

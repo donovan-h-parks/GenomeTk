@@ -1,1 +1,7 @@
-0.0.2
+0.0.11
+- modified blastn classifications to search for top 5 hits, although the top hit is still only reported
+
+0.0.10
+- added --rrna_file flag to rna command 
+
+0.0.9

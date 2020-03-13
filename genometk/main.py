@@ -18,18 +18,21 @@
 import os
 import sys
 import logging
+from collections import defaultdict
 
 from biolib.common import check_file_exists, make_sure_path_exists
 from biolib.external.execute import check_dependencies
 
 from genometk.metadata_nucleotide import MetadataNucleotide
 from genometk.metadata_genes import MetadataGenes
+from genometk.rna import RNA
 
 
 class OptionsParser():
     def __init__(self):
         """Initialization"""
-        self.logger = logging.getLogger()
+        
+        self.logger = logging.getLogger('timestamp')
 
     def _read_config_file(self):
         """Read configuration info."""
@@ -97,19 +100,68 @@ class OptionsParser():
         fout.close()
 
     def ssu(self, options):
-        self.logger.info('Calculating gene properties of genome.')
+        self.logger.info('Identifying, extracting, and classifying 16S rRNA genes.')
+
+        check_file_exists(options.genome_file)
+        check_file_exists(options.ssu_taxonomy_file)
+        make_sure_path_exists(options.output_dir)
+
+        ssu = SSU(options.cpus)
+        ssu.run(options.genome_file,
+                    options.evalue,
+                    options.concatenate,
+                    options.ssu_db,
+                    options.ssu_taxonomy_file,
+                    options.output_dir)
+                    
+    def rna(self, options):
+        self.logger.info('Identifying, extracting, and classifying rRNA genes.')
+
+        check_file_exists(options.genome_file)
+        make_sure_path_exists(options.output_dir)
+        
+        # sanity check length
+        if options.rna_gene == 'lsu_5S' and options.min_len > 120:
+            self.logger.error('Minimum length was set to %d, but LSU 5S genes are ~120 bp.' % options.min_len)
+            sys.exit(-1)
+        
+        # get HMM directory and HMM models
+        file_dir = os.path.dirname(os.path.realpath(__file__))
+        hmm_dir = os.path.join(file_dir, 'data_files', 'barrnap')
+        
+        rna_models = defaultdict(list)
+        rna_models['ssu'] = ('ar_16S', 'bac_16S', 'euk_18S')
+        rna_models['lsu_23S'] = ('ar_23S', 'bac_23S', 'euk_28S')
+        rna_models['lsu_5S'] = ('ar_5S', 'bac_5S', 'euk_5S')
+        #rna_models.append(('ar_5_8S', None, 'euk_5_8S'))
+        
+        ar_model, bac_model, euk_model = rna_models[options.rna_gene]
+        
+        # run each of the rRNA models
+        rna = RNA(options.cpus)
+        rna.run(options.genome_file,
+                    options.rna_gene,
+                    os.path.join(hmm_dir, ar_model + '.hmm'), 
+                    os.path.join(hmm_dir, bac_model + '.hmm'), 
+                    os.path.join(hmm_dir, euk_model + '.hmm'),
+                    options.evalue,
+                    options.min_len,
+                    options.concatenate,
+                    options.db,
+                    options.taxonomy_file,
+                    options.rrna_file,
+                    options.output_dir)
 
     def parse_options(self, options):
         """Parse user options and call the correct pipeline(s)"""
-
-        check_dependencies(('blastn'))
 
         if options.subparser_name == 'nucleotide':
             self.nucleotide(options)
         elif options.subparser_name == 'gene':
             self.gene(options)
-        elif options.subparser_name == 'ssu':
-            self.ssu(options)
+        elif options.subparser_name == 'rna':
+            check_dependencies(['blastn', 'nhmmer'])
+            self.rna(options)
         else:
             self.logger.error('  [Error] Unknown RefineM command: ' + options.subparser_name + '\n')
             sys.exit()

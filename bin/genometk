@@ -26,12 +26,14 @@ __status__ = "Development"
 
 import os
 import sys
+import ntpath
 import argparse
 import logging
 
 from genometk.main import OptionsParser
 
 from biolib.common import make_sure_path_exists
+from biolib.logger import logger_setup
 from biolib.misc.custom_help_formatter import CustomHelpFormatter
 
 
@@ -39,7 +41,7 @@ def version():
     """Read program version from file."""
     bin_dir = os.path.dirname(os.path.realpath(__file__))
     version_file = open(os.path.join(bin_dir, '..', 'genometk', 'VERSION'))
-    return version_file.read().strip()
+    return version_file.readline().strip()
 
 
 def print_help():
@@ -53,49 +55,14 @@ def print_help():
       nucleotide -> Calculate nucleotide properties of genome.
       gene       -> Calculate gene properties of genome.
 
-    Small subunit (16S rRNA) properties:
-      ssu -> Identify, extract, and classify 16S rRNA genes.
+    Calculate ribosomal RNA properties:
+      rna -> Identify, extract, and (optionally) classify rRNA genes.
 
   Use: genometk <command> -h for command specific help.
 
   Feature requests or bug reports can be sent to Donovan Parks (donovan.parks@gmail.com)
     or posted on GitHub (https://github.com/dparks1134/GenomeTk).
     '''
-
-
-def logger_setup(output_dir, silent):
-    """Set logging for application.
-
-    Parameters
-    ----------
-    output_dir : str
-        Output directory for log file.
-    silent : boolean
-        Flag indicating if output to stdout should be suppressed.
-    """
-
-    make_sure_path_exists(output_dir)
-
-    # setup general properties of logger
-    logger = logging.getLogger('')
-    logger.setLevel(logging.DEBUG)
-    log_format = logging.Formatter(fmt="[%(asctime)s] %(levelname)s: %(message)s",
-                                   datefmt="%Y-%m-%d %H:%M:%S")
-
-    # setup logging to console
-    if not silent:
-        stream_logger = logging.StreamHandler(sys.stdout)
-        stream_logger.setFormatter(log_format)
-        stream_logger.setLevel(logging.DEBUG)
-        logger.addHandler(stream_logger)
-
-    file_logger = logging.FileHandler(os.path.join(output_dir, 'genometk.log'), 'a')
-    file_logger.setFormatter(log_format)
-    logger.addHandler(file_logger)
-
-    logger.info('Running GenomeTk v%s' % version())
-    logger.info(' '.join(sys.argv[1:]))
-
 
 if __name__ == '__main__':
 
@@ -121,27 +88,35 @@ if __name__ == '__main__':
     gene_parser.add_argument('output_dir', help="output directory")
     gene_parser.add_argument('--silent', help="suppress output", action='store_true')
 
-    # identify, extract, and classify 16S rRNA genes
-    ssu_parser = subparsers.add_parser('ssu',
+    # identify, extract, and classify rRNA genes
+    rna_parser = subparsers.add_parser('rna',
                                         formatter_class=CustomHelpFormatter,
-                                        description='Identify, extract, and classify 16S rRNA genes.')
-    ssu_parser.add_argument('genome_file', help="fasta file of nucleotide sequences comprising genome")
-    ssu_parser.add_argument('output_dir', help="output directory")
-    ssu_parser.add_argument('--evalue', help='e-value threshold for identifying hits', type=float, default=1e-5)
-    ssu_parser.add_argument('--concatenate', help='concatenate hits within the specified number of base pairs', type=int, default=200)
-    ssu_parser.add_argument('--cpus', help='number of cpus to use', type=int, default=1)
-    ssu_parser.add_argument('--silent', help="suppress output", action='store_true')
+                                        description='Identify, extract, and classify rRNA genes.')
+    rna_parser.add_argument('genome_file', help="fasta file of nucleotide sequences comprising genome")
+    rna_parser.add_argument('rna_gene', choices=['ssu', 'lsu_23S', 'lsu_5S'], help="rRNA gene to process")
+    rna_parser.add_argument('output_dir', help="output directory")
+    rna_parser.add_argument('--db', help="BLAST database for classifying rRNA genes")
+    rna_parser.add_argument('--taxonomy_file', help="taxonomy file for rRNA genes in the specified database")
+    rna_parser.add_argument('--rrna_file', help="FASTA file with rRNA genes identified in genome if previously identified")
+    rna_parser.add_argument('--evalue', help='e-value threshold for identifying rRNA genes', type=float, default=1e-6)
+    rna_parser.add_argument('--min_len', help='minimum length to report rRNA genes', type=int, default=200)
+    rna_parser.add_argument('--concatenate', help='concatenate hits within the specified number of base pairs', type=int, default=300)
+    rna_parser.add_argument('--cpus', help='number of cpus to use', type=int, default=1)
+    rna_parser.add_argument('--silent', help="suppress output", action='store_true')
 
     # get and check options
     args = None
-    if(len(sys.argv) == 1 or sys.argv[1] == '-h' or sys.argv == '--help'):
+    if(len(sys.argv) == 1 or sys.argv[1] == '-h' or sys.argv[1] == '--help'):
         print_help()
         sys.exit(0)
     else:
         args = parser.parse_args()
 
     # setup logging
-    logger_setup(args.output_dir, args.silent)
+    if hasattr(args, 'output_dir'):
+        logger_setup(args.output_dir, "genometk.log", "GenomeTk", version(), args.silent)
+    else:
+        logger_setup(None, "genometk.log", "GenomeTk", version(), args.silent)
 
     # do what we came here to do
     try:

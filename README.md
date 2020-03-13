@@ -4,11 +4,6 @@
 
 The genome toolkit is a collection of methods for determining characteristics about genomes. 
 
-<i>Measures of tree stability:</i>
-* bootstrap support
-* jackknife taxa support
-* jackknife gene support
-
 ## Install
 
 The simplest way to install this package is through pip:
@@ -17,6 +12,10 @@ The simplest way to install this package is through pip:
 GenomeTk relies on several other software packages:
 
 TBD
+
+## RNA search
+
+Identification of rRNA genes is performed using the rRNA HMM models in [barrnap](https://github.com/tseemann/barrnap).
 
 ## Cite
 
