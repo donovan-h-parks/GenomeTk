@@ -17,8 +17,6 @@
 
 import os
 
-def version():
-    """Read program version from file."""
-    import genometk
-    version_file = open(os.path.join(__path__[0], 'VERSION'))
-    return version_file.readline().strip()
+# Set the module version.
+with open(os.path.join(__path__[0], 'VERSION'), 'r') as f:
+    __version__ = f.readline().strip()

@@ -1,6 +1,7 @@
 # GenomeTk
 
 [![version status](https://img.shields.io/pypi/v/genometk.svg)](https://pypi.python.org/pypi/genometk)
+[![ace-internal](https://img.shields.io/conda/vn/ace-internal/genometk.svg?color=green)](https://anaconda.org/ace-internal/genometk)
 [![Downloads](https://pepy.tech/badge/genometk)](https://pepy.tech/project/genometk)
 
 The genome toolkit is a collection of methods for determining characteristics about genomes. 
