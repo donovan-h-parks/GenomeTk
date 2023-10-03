@@ -1,13 +1,15 @@
 # GenomeTk
 
-<b>[This project is in active development and not currently recommended for public use.]</b>
+[![version status](https://img.shields.io/pypi/v/genometk.svg)](https://pypi.python.org/pypi/genometk)
+[![ace-internal](https://img.shields.io/conda/vn/ace-internal/genometk.svg?color=green)](https://anaconda.org/ace-internal/genometk)
+[![Downloads](https://pepy.tech/badge/genometk)](https://pepy.tech/project/genometk)
 
 The genome toolkit is a collection of methods for determining characteristics about genomes. 
 
 ## Install
 
 The simplest way to install this package is through pip:
-> sudo pip install genome_tk
+> sudo pip install genometk
 
 GenomeTk relies on several other software packages:
 
